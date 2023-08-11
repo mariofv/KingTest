@@ -13,6 +13,11 @@ public:
 	void Terminate();
 
 private:
+	void CreateUser();
+	void SendMessage();
+	void ReceiveAllMessagesForUser();
+
+
 	bool Exists(std::string userToCheck);
 	std::vector<std::string> users;
 
