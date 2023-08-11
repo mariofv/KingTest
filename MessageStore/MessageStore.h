@@ -8,18 +8,18 @@ using namespace std;
 
 class MessageStore
 {
-public:
-	
+public:	
 	bool ProcessInput(); // returns true when finished
-	void terminate();
-private:
+	void Terminate();
 
-	bool Exists(std::string u);
+private:
+	bool Exists(std::string userToCheck);
 	std::vector<std::string> users;
+
 	struct Message {
-		std::string from;
-		std::string to;
-		std::string msg;
+		std::string sender;
+		std::string receiver;
+		std::string message;
 	};
 	std::vector<Message*> messages;
 };

@@ -3,14 +3,11 @@
 
 int main(int, const char* [])
 {
-	
 	MessageStore store;
 	
-	while (store.ProcessInput() == false){
+	while (store.ProcessInput() == false);
 	
-	}
-	
-	store.terminate();
+	store.Terminate();
 	
 	return 0;
 }

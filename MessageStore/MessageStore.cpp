@@ -1,111 +1,154 @@
 
 #include "MessageStore.h"
 
-bool MessageStore::ProcessInput() {
+bool MessageStore::ProcessInput() 
+{
 	bool ret = false;
-	// clear screen
-	for (int i = 0; i < 80; ++i) cout << endl;
-	// show options
+
+	// Clear screen
+	for (int i = 0; i < 80; ++i)
+	{
+		cout << endl;
+	}
+
+	// Show options
 	cout << "Please select an option:" << endl;
 	cout << "1. Create User" << endl;
 	cout << "2. Send Message" << endl;
 	cout << "3. Receive All Messages For User" << endl;
 	cout << "4. Quit" << endl;
-	std::string in;
-	std::getline(std::cin, in);
+
+	std::string option;
+	std::getline(std::cin, option);
 	cout << endl;
-	if (in == "1")
+
+	if (option == "1")
 	{
 		cout << "Please enter name: ";
-		std::string str;
-		std::getline(std::cin, str);
+		std::string newUserName;
+		std::getline(std::cin, newUserName);
 		cout << endl;
-		if (Exists(str))
+
+		if (Exists(newUserName))
 		{
 			cout << "ERROR: User already exists!" << endl;
-		} else {
-			users.push_back(str);
-			cout << "User " << str << " added!" << endl;
+		} 
+		else 
+		{
+			users.push_back(newUserName);
+			cout << "User " << newUserName << " added!" << endl;
 		}
-	} else if (in == "2"){
+	}
+
+	else if (option == "2")
+	{
 		cout << "From: ";
-		std::string from;
-		std::getline(std::cin, from);
+		std::string sender;
+		std::getline(std::cin, sender);
 		cout << endl;
-		if (Exists(from) == false)
+
+		if (Exists(sender) == false)
+		{
 			cout <<"ERROR: User doesn't exist!" << endl;
-		else {
+		}
+		else 
+		{
 			cout << "To: ";
-			std::string to;
-			std::getline(std::cin, to);
+			std::string receiver;
+			std::getline(std::cin, receiver);
 			cout << endl;
-			if (Exists(to) == false)
+			if (Exists(receiver) == false)
+			{
 				cout <<"ERROR: User doesn't exist!" << endl;
-			else {
+			}
+			else 
+			{
 				cout << "Message: ";
-				std::string msg;
-				std::getline(std::cin, msg);
+				std::string messageText;
+				std::getline(std::cin, messageText);
 				cout << endl;
 				cout << "Message Sent!" << endl;
-				Message* m = new Message;
-				m->from = from;
-				m->to = to;
-				m->msg = msg;
-				messages.push_back(m);
+
+				Message* message = new Message;
+				message->sender = sender;
+				message->receiver = receiver;
+				message->message = messageText;
+				messages.push_back(message);
 			}
 		}
-	} else if (in == "3") {
+	} 
+
+	else if (option == "3") 
+	{
 		cout << "Enter name of user to receive all messages for: " << endl;
 		std::string user;
 		std::getline(std::cin, user);
 		cout << endl;
+
 		if (Exists(user) == true)
 		{
 			cout << endl << "===== BEGIN MESSAGES =====" << endl;
-			int num = 0;
-			bool more;
-			do {
-				more = false;
+			int messageNumber = 0;
+			bool areMessagesPending;
+			do 
+			{
+				areMessagesPending = false;
 				for (unsigned int i = 0; i < messages.size(); ++i)
 				{
-					if (messages[i]->to == user) {
-						cout << "Message " << ++num << endl;
-						cout << "From: " << messages[i]->from << endl;
-						cout << "Content: " << messages[i]->msg << endl << endl;
+					if (messages[i]->receiver == user) {
+						cout << "Message " << ++messageNumber << endl;
+						cout << "From: " << messages[i]->sender << endl;
+						cout << "Content: " << messages[i]->message << endl << endl;
 						delete messages[i];
 						messages.erase(messages.begin() + i);
-						more = true;
+						areMessagesPending = true;
 						break;
 					}
 				}
-			} while (more);
+			} 
+			while (areMessagesPending);
 			
 			cout << endl << "===== END MESSAGES =====" << endl;
-		} else
+		} 
+		else
+		{
 			cout <<"ERROR: User doesn't exist!" << endl;
-	} else if (in == "4") {
+		}
+	} 
+
+	else if (option == "4") 
+	{
 		cout << "Quitting!" << endl;
-		ret=true;
-	} else
+		ret = true;
+	}
+
+	else
 	{
 		cout << "Invalid Option Selected" << endl;
 	}
+
 	cout << endl <<"Enter any key and press return to continue.....";
-	std::string str;
-	std::getline(std::cin, str);
+	std::string anyKey;
+	std::getline(std::cin, anyKey);
 	return ret;
 }
 
-void MessageStore::terminate()
+void MessageStore::Terminate()
 {
 	for (unsigned int i = 0; i < messages.size(); ++i)
+	{
 		delete messages[i];
+	}
 }
 
-bool MessageStore::Exists(std::string u)
+bool MessageStore::Exists(std::string userToCheck)
 {
 	for (unsigned int i = 0; i < users.size(); ++i)
-		if (users[i] == u)
+	{
+		if (users[i] == userToCheck)
+		{
 			return true;
+		}
+	}
 	return false;
 }
