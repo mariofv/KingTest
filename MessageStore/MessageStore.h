@@ -12,7 +12,7 @@ public:
 private:
 	struct User 
 	{
-		User(unsigned int id, const std::string username) : id(id), username(username) {}
+		User(unsigned int id, const std::string& username) : id(id), username(username) {}
 
 		unsigned int id;
 		std::string username;
@@ -22,10 +22,10 @@ private:
 	void SendMessage();
 	void ReceiveAllMessagesForUser();
 
-	bool Exists(const std::string usernameToCheck) const;
+	bool Exists(const std::string& usernameToCheck) const;
 	bool Exists(unsigned int userIdToCheck) const;
 
-	User* GetUser(const std::string username) const;
+	User* GetUser(const std::string& username) const;
 	User* GetUser(unsigned int userId) const;
 
 	struct Message

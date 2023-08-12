@@ -183,7 +183,7 @@ void MessageStore::Terminate()
 	}
 }
 
-bool MessageStore::Exists(const string usernameToCheck) const
+bool MessageStore::Exists(const string& usernameToCheck) const
 {
 	return usernameRegistry.find(usernameToCheck) != usernameRegistry.end();
 }
@@ -193,7 +193,7 @@ bool MessageStore::Exists(unsigned int userIdToCheck) const
 	return userIdToCheck < users.size() && users[userIdToCheck] != nullptr;
 }
 
-MessageStore::User* MessageStore::GetUser(const std::string username) const
+MessageStore::User* MessageStore::GetUser(const std::string& username) const
 {
 	if (!Exists(username))
 	{
