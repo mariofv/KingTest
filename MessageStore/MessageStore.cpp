@@ -183,27 +183,27 @@ void MessageStore::Terminate()
 	}
 }
 
-bool MessageStore::Exists(string usernameToCheck)
+bool MessageStore::Exists(const string usernameToCheck) const
 {
 	return usernameRegistry.find(usernameToCheck) != usernameRegistry.end();
 }
 
-bool MessageStore::Exists(unsigned int userIdToCheck)
+bool MessageStore::Exists(unsigned int userIdToCheck) const
 {
 	return userIdToCheck < users.size() && users[userIdToCheck] != nullptr;
 }
 
-MessageStore::User* MessageStore::GetUser(std::string username)
+MessageStore::User* MessageStore::GetUser(const std::string username) const
 {
 	if (!Exists(username))
 	{
 		throw runtime_error("A user with username " + username + " doesn't exist!");
 	}
 
-	return usernameRegistry[username];
+	return usernameRegistry.at(username);
 }
 
-MessageStore::User* MessageStore::GetUser(unsigned int userId)
+MessageStore::User* MessageStore::GetUser(unsigned int userId) const
 {
 	if (!Exists(userId))
 	{
