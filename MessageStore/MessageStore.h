@@ -8,15 +8,25 @@
 class MessageStore
 {
 public:	
-	bool ProcessInput(); // returns true when finished
+	bool ProcessInput(); // Returns true when finished
 	void Terminate();
 
 private:
 	struct Message
 	{
+		Message() = default;
+
+		Message(Message& p_Message) // Copy constructor
+		{
+			m_SenderId = p_Message.m_SenderId;
+			m_ReceiverId = p_Message.m_ReceiverId;
+			m_Timestamp = p_Message.m_Timestamp;
+			m_Message = p_Message.m_Message;
+		}
+
 		unsigned int m_SenderId = 0;
 		unsigned int m_ReceiverId = 0;
-		std::time_t m_Timestamp;
+		std::time_t m_Timestamp = 0;
 		std::string m_Message;
 	};
 
@@ -35,6 +45,7 @@ private:
 		unsigned int m_Id;
 		std::string m_Username;
 		std::vector<Message*> m_Inbox;
+		std::vector<Message*> m_Sent;
 	};
 
 	void CreateUser();

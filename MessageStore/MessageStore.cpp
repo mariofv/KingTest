@@ -116,12 +116,15 @@ void MessageStore::SendMessage()
 	User* sender = GetUser(senderUsername);
 	User* receiver = GetUser(receiverUsername);
 
-	Message* message = new Message;
-	message->m_SenderId = sender->m_Id;
-	message->m_ReceiverId = receiver->m_Id;
-	message->m_Timestamp = time(0);
-	message->m_Message = messageText;
-	receiver->m_Inbox.push_back(message);
+	Message* senderMessage = new Message();
+	senderMessage->m_SenderId = sender->m_Id;
+	senderMessage->m_ReceiverId = receiver->m_Id;
+	senderMessage->m_Timestamp = time(0);
+	senderMessage->m_Message = messageText;
+	sender->m_Sent.push_back(senderMessage);
+
+	Message* receiverMessage = new Message(*senderMessage);
+	receiver->m_Inbox.push_back(receiverMessage);
 
 	cout << endl;
 	cout << "Message Sent!" << endl;
