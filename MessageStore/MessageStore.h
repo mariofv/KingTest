@@ -11,12 +11,28 @@ public:
 	void Terminate();
 
 private:
+	struct Message
+	{
+		unsigned int m_SenderId = 0;
+		unsigned int m_ReceiverId = 0;
+		std::string m_Message;
+	};
+
 	struct User 
 	{
 		User(unsigned int p_Id, const std::string& p_Username) : m_Id(p_Id), m_Username(p_Username) {}
 
+		~User()
+		{
+			for (unsigned int i = 0; i < m_Inbox.size(); ++i)
+			{
+				delete m_Inbox[i];
+			}
+		}
+
 		unsigned int m_Id;
 		std::string m_Username;
+		std::vector<Message*> m_Inbox;
 	};
 
 	void CreateUser();
@@ -29,17 +45,8 @@ private:
 	User* GetUser(const std::string& p_Username) const;
 	User* GetUser(unsigned int p_UserId) const;
 
-	struct Message
-	{
-		unsigned int m_SenderId;
-		unsigned int m_ReceiverId;
-		std::string m_Message;
-	};
-
 private:
 	unsigned int m_CurrentId = 0;
 	std::vector<User*> m_Users;
 	std::map<std::string, User*> m_UsernameRegistry;
-
-	std::vector<Message*> m_Messages;
 };

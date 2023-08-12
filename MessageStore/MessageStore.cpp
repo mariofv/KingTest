@@ -120,7 +120,7 @@ void MessageStore::SendMessage()
 	message->m_SenderId = sender->m_Id;
 	message->m_ReceiverId = receiver->m_Id;
 	message->m_Message = messageText;
-	m_Messages.push_back(message);
+	receiver->m_Inbox.push_back(message);
 
 	cout << endl;
 	cout << "Message Sent!" << endl;
@@ -142,27 +142,19 @@ void MessageStore::ReceiveAllMessagesForUser()
 	User* user = GetUser(username);
 
 	cout << endl << "===== BEGIN MESSAGES =====" << endl;
-	int messageNumber = 0;
-	bool areMessagesPending;
-	do
-	{
-		areMessagesPending = false;
-		for (unsigned int i = 0; i < m_Messages.size(); ++i)
-		{
-			if (m_Messages[i]->m_ReceiverId == user->m_Id)
-			{
-				User* sender = GetUser(m_Messages[i]->m_SenderId);
 
-				cout << "Message " << ++messageNumber << endl;
-				cout << "From: " << sender->m_Username << endl;
-				cout << "Content: " << m_Messages[i]->m_Message << endl << endl;
-				delete m_Messages[i];
-				m_Messages.erase(m_Messages.begin() + i);
-				areMessagesPending = true;
-				break;
-			}
-		}
-	} while (areMessagesPending);
+	for (unsigned int i = 0; i < user->m_Inbox.size(); ++i)
+	{
+		Message* message = user->m_Inbox[i];
+		User* sender = GetUser(message->m_SenderId);
+
+		cout << "Message " << i << endl;
+		cout << "From: " << sender->m_Username << endl;
+		cout << "Content: " << message->m_Message << endl << endl;
+
+		delete message;
+	}
+	user->m_Inbox.clear();
 
 	cout << endl << "===== END MESSAGES =====" << endl;	
 }
@@ -172,11 +164,6 @@ void MessageStore::Terminate()
 	for (unsigned int i = 0; i < m_Users.size(); ++i)
 	{
 		delete m_Users[i];
-	}
-
-	for (unsigned int i = 0; i < m_Messages.size(); ++i)
-	{
-		delete m_Messages[i];
 	}
 }
 
