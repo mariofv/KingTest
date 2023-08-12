@@ -3,8 +3,6 @@
 #include <vector>
 #include <map>
 
-#include <iostream>
-
 class MessageStore
 {
 public:	

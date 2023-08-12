@@ -1,7 +1,8 @@
 #include "MessageStore.h"
 
-#include  <stdexcept>
+#include <iostream>
 #include <limits>
+#include  <stdexcept>
 
 using namespace std;
 
