@@ -119,6 +119,7 @@ void MessageStore::SendMessage()
 	Message* message = new Message;
 	message->m_SenderId = sender->m_Id;
 	message->m_ReceiverId = receiver->m_Id;
+	message->m_Timestamp = time(0);
 	message->m_Message = messageText;
 	receiver->m_Inbox.push_back(message);
 
@@ -150,6 +151,7 @@ void MessageStore::ReceiveAllMessagesForUser()
 
 		cout << "Message " << i << endl;
 		cout << "From: " << sender->m_Username << endl;
+		cout << "Timestamp: " << message->m_Timestamp << endl;
 		cout << "Content: " << message->m_Message << endl << endl;
 
 		delete message;

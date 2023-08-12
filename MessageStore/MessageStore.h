@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <ctime>
 
 class MessageStore
 {
@@ -15,6 +16,7 @@ private:
 	{
 		unsigned int m_SenderId = 0;
 		unsigned int m_ReceiverId = 0;
+		std::time_t m_Timestamp;
 		std::string m_Message;
 	};
 
