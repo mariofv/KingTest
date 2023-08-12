@@ -1,6 +1,7 @@
 #include "MessageStore.h"
 
 #include  <stdexcept>
+#include <limits>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ bool MessageStore::ProcessInput()
 	bool ret = false;
 
 	// Clear screen
-	for (int i = 0; i < 80; ++i)
+	for (unsigned int i = 0; i < 80; ++i)
 	{
 		cout << endl;
 	}
@@ -21,29 +22,37 @@ bool MessageStore::ProcessInput()
 	cout << "3. Receive All Messages For User" << endl;
 	cout << "4. Quit" << endl;
 
-	string option;
-	getline(cin, option);
+	unsigned int option;
+	cin >> option;
+	if (cin.fail())
+	{
+		option = 0;
+		cin.clear();
+	}
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	
 	cout << endl;
 
-	if (option == "1")
+	switch (option)
 	{
+	case 1:
 		CreateUser();
-	}
-	else if (option == "2")
-	{
+		break;
+
+	case 2:
 		SendMessage();
-	} 
-	else if (option == "3") 
-	{
+		break;
+
+	case 3:
 		ReceiveAllMessagesForUser();
-	} 
-	else if (option == "4") 
-	{
+		break;
+
+	case 4:
 		cout << "Quitting!" << endl;
 		ret = true;
-	}
-	else
-	{
+		break;
+
+	default:
 		cout << "Invalid Option Selected" << endl;
 	}
 
@@ -83,7 +92,7 @@ void MessageStore::SendMessage()
 	getline(cin, senderUsername);
 	cout << endl;
 
-	if (Exists(senderUsername) == false)
+	if (!Exists(senderUsername))
 	{
 		cout << "ERROR: User doesn't exist!" << endl;
 	}
@@ -95,7 +104,7 @@ void MessageStore::SendMessage()
 		string receiverUsername;
 		getline(cin, receiverUsername);
 		cout << endl;
-		if (Exists(receiverUsername) == false)
+		if (!Exists(receiverUsername))
 		{
 			cout << "ERROR: User doesn't exist!" << endl;
 		}
@@ -125,7 +134,7 @@ void MessageStore::ReceiveAllMessagesForUser()
 	getline(cin, username);
 	cout << endl;
 
-	if (Exists(username) == true)
+	if (Exists(username))
 	{
 		User* user = GetUser(username);
 
