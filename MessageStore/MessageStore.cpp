@@ -1,6 +1,8 @@
 
 #include "MessageStore.h"
 
+using namespace std;
+
 bool MessageStore::ProcessInput() 
 {
 	bool ret = false;
@@ -18,8 +20,8 @@ bool MessageStore::ProcessInput()
 	cout << "3. Receive All Messages For User" << endl;
 	cout << "4. Quit" << endl;
 
-	std::string option;
-	std::getline(std::cin, option);
+	string option;
+	getline(cin, option);
 	cout << endl;
 
 	if (option == "1")
@@ -45,8 +47,8 @@ bool MessageStore::ProcessInput()
 	}
 
 	cout << endl <<"Enter any key and press return to continue.....";
-	std::string anyKey;
-	std::getline(std::cin, anyKey);
+	string anyKey;
+	getline(cin, anyKey);
 	return ret;
 }
 
@@ -54,8 +56,8 @@ bool MessageStore::ProcessInput()
 void MessageStore::CreateUser()
 {
 	cout << "Please enter name: ";
-	std::string newUserName;
-	std::getline(std::cin, newUserName);
+	string newUserName;
+	getline(cin, newUserName);
 	cout << endl;
 
 	if (Exists(newUserName))
@@ -72,8 +74,8 @@ void MessageStore::CreateUser()
 void MessageStore::SendMessage()
 {
 	cout << "From: ";
-	std::string sender;
-	std::getline(std::cin, sender);
+	string sender;
+	getline(cin, sender);
 	cout << endl;
 
 	if (Exists(sender) == false)
@@ -83,8 +85,8 @@ void MessageStore::SendMessage()
 	else
 	{
 		cout << "To: ";
-		std::string receiver;
-		std::getline(std::cin, receiver);
+		string receiver;
+		getline(cin, receiver);
 		cout << endl;
 		if (Exists(receiver) == false)
 		{
@@ -93,8 +95,8 @@ void MessageStore::SendMessage()
 		else
 		{
 			cout << "Message: ";
-			std::string messageText;
-			std::getline(std::cin, messageText);
+			string messageText;
+			getline(cin, messageText);
 			cout << endl;
 			cout << "Message Sent!" << endl;
 
@@ -110,8 +112,8 @@ void MessageStore::SendMessage()
 void MessageStore::ReceiveAllMessagesForUser()
 {
 	cout << "Enter name of user to receive all messages for: " << endl;
-	std::string user;
-	std::getline(std::cin, user);
+	string user;
+	getline(cin, user);
 	cout << endl;
 
 	if (Exists(user) == true)
@@ -152,7 +154,7 @@ void MessageStore::Terminate()
 	}
 }
 
-bool MessageStore::Exists(std::string userToCheck)
+bool MessageStore::Exists(string userToCheck)
 {
 	for (unsigned int i = 0; i < users.size(); ++i)
 	{
