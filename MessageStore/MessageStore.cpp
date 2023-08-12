@@ -21,7 +21,8 @@ bool MessageStore::ProcessInput()
 	cout << "1. Create User" << endl;
 	cout << "2. Send Message" << endl;
 	cout << "3. Receive All Messages For User" << endl;
-	cout << "4. Quit" << endl;
+	cout << "4. Report All Messages of All Senders" << endl;
+	cout << "5. Quit" << endl;
 
 	unsigned int option;
 	cin >> option;
@@ -49,6 +50,10 @@ bool MessageStore::ProcessInput()
 		break;
 
 	case 4:
+		ReportAllMessagesOfAllSenders();
+		break;
+
+	case 5:
 		cout << "Quitting!" << endl;
 		ret = true;
 		break;
@@ -162,6 +167,27 @@ void MessageStore::ReceiveAllMessagesForUser()
 	user->m_Inbox.clear();
 
 	cout << endl << "===== END MESSAGES =====" << endl;	
+}
+
+void MessageStore::ReportAllMessagesOfAllSenders() const
+{
+	for (unsigned int i = 0; i < m_Users.size(); ++i)
+	{
+		User* user = m_Users[i];
+		if (user->m_Sent.empty())
+		{
+			continue;
+		}
+
+		cout << user->m_Username << " (" << user->m_Sent.size() << " messages):" << endl;
+
+		for (unsigned int j = 0; j < user->m_Sent.size(); ++j)
+		{
+			Message* message = user->m_Sent[j];
+			User* receiver = GetUser(message->m_ReceiverId);
+			cout << '\t' << message->m_Timestamp << ", " << receiver->m_Username << endl;
+		}
+	}
 }
 
 void MessageStore::Terminate()

@@ -51,6 +51,7 @@ private:
 	void CreateUser();
 	void SendMessage();
 	void ReceiveAllMessagesForUser();
+	void ReportAllMessagesOfAllSenders() const;
 
 	bool Exists(const std::string& p_UsernameToCheck) const;
 	bool Exists(unsigned int p_UserIdToCheck) const;
