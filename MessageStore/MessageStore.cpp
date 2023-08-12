@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <limits>
-#include  <stdexcept>
+#include <stdexcept>
 
 using namespace std;
 
@@ -74,16 +74,15 @@ void MessageStore::CreateUser()
 	if (Exists(newUsername))
 	{
 		cout << "ERROR: User already exists!" << endl;
+		return;
 	}
-	else
-	{
-		User* createdUser = new User(currentId++, newUsername);
-		users.push_back(createdUser);
 
-		usernameRegistry[newUsername] = createdUser;
+	User* createdUser = new User(currentId++, newUsername);
+	users.push_back(createdUser);
 
-		cout << "User " << newUsername << " added!" << endl;
-	}
+	usernameRegistry[newUsername] = createdUser;
+
+	cout << "User " << newUsername << " added!" << endl;
 }
 
 void MessageStore::SendMessage()
@@ -96,36 +95,35 @@ void MessageStore::SendMessage()
 	if (!Exists(senderUsername))
 	{
 		cout << "ERROR: User doesn't exist!" << endl;
+		return;
 	}
-	else
+
+	cout << "To: ";
+	string receiverUsername;
+	getline(cin, receiverUsername);
+	cout << endl;
+
+	if (!Exists(receiverUsername))
 	{
-		User* sender = GetUser(senderUsername);
-
-		cout << "To: ";
-		string receiverUsername;
-		getline(cin, receiverUsername);
-		cout << endl;
-		if (!Exists(receiverUsername))
-		{
-			cout << "ERROR: User doesn't exist!" << endl;
-		}
-		else
-		{
-			User* receiver = GetUser(receiverUsername);
-
-			cout << "Message: ";
-			string messageText;
-			getline(cin, messageText);
-			cout << endl;
-			cout << "Message Sent!" << endl;
-
-			Message* message = new Message;
-			message->senderId = sender->id;
-			message->receiverId = receiver->id;
-			message->message = messageText;
-			messages.push_back(message);
-		}
+		cout << "ERROR: User doesn't exist!" << endl;
+		return;
 	}
+
+	cout << "Message: ";
+	string messageText;
+	getline(cin, messageText);
+
+	User* sender = GetUser(senderUsername);
+	User* receiver = GetUser(receiverUsername);
+
+	Message* message = new Message;
+	message->senderId = sender->id;
+	message->receiverId = receiver->id;
+	message->message = messageText;
+	messages.push_back(message);
+
+	cout << endl;
+	cout << "Message Sent!" << endl;
 }
 
 void MessageStore::ReceiveAllMessagesForUser()
@@ -135,39 +133,38 @@ void MessageStore::ReceiveAllMessagesForUser()
 	getline(cin, username);
 	cout << endl;
 
-	if (Exists(username))
-	{
-		User* user = GetUser(username);
-
-		cout << endl << "===== BEGIN MESSAGES =====" << endl;
-		int messageNumber = 0;
-		bool areMessagesPending;
-		do
-		{
-			areMessagesPending = false;
-			for (unsigned int i = 0; i < messages.size(); ++i)
-			{
-				if (messages[i]->receiverId == user->id)
-				{
-					User* sender = GetUser(messages[i]->senderId);
-
-					cout << "Message " << ++messageNumber << endl;
-					cout << "From: " << sender->username << endl;
-					cout << "Content: " << messages[i]->message << endl << endl;
-					delete messages[i];
-					messages.erase(messages.begin() + i);
-					areMessagesPending = true;
-					break;
-				}
-			}
-		} while (areMessagesPending);
-
-		cout << endl << "===== END MESSAGES =====" << endl;
-	}
-	else
+	if (!Exists(username))
 	{
 		cout << "ERROR: User doesn't exist!" << endl;
+		return;
 	}
+
+	User* user = GetUser(username);
+
+	cout << endl << "===== BEGIN MESSAGES =====" << endl;
+	int messageNumber = 0;
+	bool areMessagesPending;
+	do
+	{
+		areMessagesPending = false;
+		for (unsigned int i = 0; i < messages.size(); ++i)
+		{
+			if (messages[i]->receiverId == user->id)
+			{
+				User* sender = GetUser(messages[i]->senderId);
+
+				cout << "Message " << ++messageNumber << endl;
+				cout << "From: " << sender->username << endl;
+				cout << "Content: " << messages[i]->message << endl << endl;
+				delete messages[i];
+				messages.erase(messages.begin() + i);
+				areMessagesPending = true;
+				break;
+			}
+		}
+	} while (areMessagesPending);
+
+	cout << endl << "===== END MESSAGES =====" << endl;	
 }
 
 void MessageStore::Terminate()
