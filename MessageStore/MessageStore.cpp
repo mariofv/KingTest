@@ -1,5 +1,6 @@
-
 #include "MessageStore.h"
+
+#include  <stdexcept>
 
 using namespace std;
 
@@ -56,44 +57,52 @@ bool MessageStore::ProcessInput()
 void MessageStore::CreateUser()
 {
 	cout << "Please enter name: ";
-	string newUserName;
-	getline(cin, newUserName);
+	string newUsername;
+	getline(cin, newUsername);
 	cout << endl;
 
-	if (Exists(newUserName))
+	if (Exists(newUsername))
 	{
 		cout << "ERROR: User already exists!" << endl;
 	}
 	else
 	{
-		users.push_back(newUserName);
-		cout << "User " << newUserName << " added!" << endl;
+		User* createdUser = new User(currentId++, newUsername);
+		users.push_back(createdUser);
+
+		usernameRegistry[newUsername] = createdUser;
+
+		cout << "User " << newUsername << " added!" << endl;
 	}
 }
 
 void MessageStore::SendMessage()
 {
 	cout << "From: ";
-	string sender;
-	getline(cin, sender);
+	string senderUsername;
+	getline(cin, senderUsername);
 	cout << endl;
 
-	if (Exists(sender) == false)
+	if (Exists(senderUsername) == false)
 	{
 		cout << "ERROR: User doesn't exist!" << endl;
 	}
 	else
 	{
+		User* sender = GetUser(senderUsername);
+
 		cout << "To: ";
-		string receiver;
-		getline(cin, receiver);
+		string receiverUsername;
+		getline(cin, receiverUsername);
 		cout << endl;
-		if (Exists(receiver) == false)
+		if (Exists(receiverUsername) == false)
 		{
 			cout << "ERROR: User doesn't exist!" << endl;
 		}
 		else
 		{
+			User* receiver = GetUser(receiverUsername);
+
 			cout << "Message: ";
 			string messageText;
 			getline(cin, messageText);
@@ -101,8 +110,8 @@ void MessageStore::SendMessage()
 			cout << "Message Sent!" << endl;
 
 			Message* message = new Message;
-			message->sender = sender;
-			message->receiver = receiver;
+			message->senderId = sender->id;
+			message->receiverId = receiver->id;
 			message->message = messageText;
 			messages.push_back(message);
 		}
@@ -112,12 +121,14 @@ void MessageStore::SendMessage()
 void MessageStore::ReceiveAllMessagesForUser()
 {
 	cout << "Enter name of user to receive all messages for: " << endl;
-	string user;
-	getline(cin, user);
+	string username;
+	getline(cin, username);
 	cout << endl;
 
-	if (Exists(user) == true)
+	if (Exists(username) == true)
 	{
+		User* user = GetUser(username);
+
 		cout << endl << "===== BEGIN MESSAGES =====" << endl;
 		int messageNumber = 0;
 		bool areMessagesPending;
@@ -126,9 +137,12 @@ void MessageStore::ReceiveAllMessagesForUser()
 			areMessagesPending = false;
 			for (unsigned int i = 0; i < messages.size(); ++i)
 			{
-				if (messages[i]->receiver == user) {
+				if (messages[i]->receiverId == user->id)
+				{
+					User* sender = GetUser(messages[i]->senderId);
+
 					cout << "Message " << ++messageNumber << endl;
-					cout << "From: " << messages[i]->sender << endl;
+					cout << "From: " << sender->username << endl;
 					cout << "Content: " << messages[i]->message << endl << endl;
 					delete messages[i];
 					messages.erase(messages.begin() + i);
@@ -148,20 +162,43 @@ void MessageStore::ReceiveAllMessagesForUser()
 
 void MessageStore::Terminate()
 {
+	for (unsigned int i = 0; i < users.size(); ++i)
+	{
+		delete users[i];
+	}
+
 	for (unsigned int i = 0; i < messages.size(); ++i)
 	{
 		delete messages[i];
 	}
 }
 
-bool MessageStore::Exists(string userToCheck)
+bool MessageStore::Exists(string usernameToCheck)
 {
-	for (unsigned int i = 0; i < users.size(); ++i)
+	return usernameRegistry.find(usernameToCheck) != usernameRegistry.end();
+}
+
+bool MessageStore::Exists(unsigned int userIdToCheck)
+{
+	return userIdToCheck < users.size() && users[userIdToCheck] != nullptr;
+}
+
+MessageStore::User* MessageStore::GetUser(std::string username)
+{
+	if (!Exists(username))
 	{
-		if (users[i] == userToCheck)
-		{
-			return true;
-		}
+		throw runtime_error("A user with username " + username + " doesn't exist!");
 	}
-	return false;
+
+	return usernameRegistry[username];
+}
+
+MessageStore::User* MessageStore::GetUser(unsigned int userId)
+{
+	if (!Exists(userId))
+	{
+		throw runtime_error("A user with user id  " + to_string(userId) + " doesn't exist!");
+	}
+
+	return users[userId];
 }

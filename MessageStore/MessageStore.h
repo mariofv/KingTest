@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
 
 #include <iostream>
 
@@ -11,18 +12,35 @@ public:
 	void Terminate();
 
 private:
+	struct User 
+	{
+		User(unsigned int id, std::string username) : id(id), username(username) {}
+
+		unsigned int id;
+		std::string username;
+	};
+
 	void CreateUser();
 	void SendMessage();
 	void ReceiveAllMessagesForUser();
 
+	bool Exists(std::string usernameToCheck);
+	bool Exists(unsigned int userIdToCheck);
 
-	bool Exists(std::string userToCheck);
-	std::vector<std::string> users;
+	User* GetUser(std::string username);
+	User* GetUser(unsigned int userId);
 
-	struct Message {
-		std::string sender;
-		std::string receiver;
+	struct Message
+	{
+		unsigned int senderId;
+		unsigned int receiverId;
 		std::string message;
 	};
+
+private:
+	unsigned int currentId = 0;
+	std::vector<User*> users;
+	std::map<std::string, User*> usernameRegistry;
+
 	std::vector<Message*> messages;
 };
