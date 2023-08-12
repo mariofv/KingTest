@@ -40,6 +40,11 @@ private:
 			{
 				delete m_Inbox[i];
 			}
+
+			for (unsigned int i = 0; i < m_Sent.size(); ++i)
+			{
+				delete m_Sent[i];
+			}
 		}
 
 		unsigned int m_Id;
