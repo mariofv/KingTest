@@ -13,33 +13,33 @@ public:
 private:
 	struct User 
 	{
-		User(unsigned int id, const std::string& username) : id(id), username(username) {}
+		User(unsigned int p_Id, const std::string& p_Username) : m_Id(p_Id), m_Username(p_Username) {}
 
-		unsigned int id;
-		std::string username;
+		unsigned int m_Id;
+		std::string m_Username;
 	};
 
 	void CreateUser();
 	void SendMessage();
 	void ReceiveAllMessagesForUser();
 
-	bool Exists(const std::string& usernameToCheck) const;
-	bool Exists(unsigned int userIdToCheck) const;
+	bool Exists(const std::string& p_UsernameToCheck) const;
+	bool Exists(unsigned int p_UserIdToCheck) const;
 
-	User* GetUser(const std::string& username) const;
-	User* GetUser(unsigned int userId) const;
+	User* GetUser(const std::string& p_Username) const;
+	User* GetUser(unsigned int p_UserId) const;
 
 	struct Message
 	{
-		unsigned int senderId;
-		unsigned int receiverId;
-		std::string message;
+		unsigned int m_SenderId;
+		unsigned int m_ReceiverId;
+		std::string m_Message;
 	};
 
 private:
-	unsigned int currentId = 0;
-	std::vector<User*> users;
-	std::map<std::string, User*> usernameRegistry;
+	unsigned int m_CurrentId = 0;
+	std::vector<User*> m_Users;
+	std::map<std::string, User*> m_UsernameRegistry;
 
-	std::vector<Message*> messages;
+	std::vector<Message*> m_Messages;
 };
